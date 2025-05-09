@@ -1,11 +1,9 @@
 # Imports
 import os
-import numpy as np
 import pandas as pd
 
 # PyTorch Imports
 import torch
-import torch.nn as nn
 import torch.nn.functional as F
 import torch.optim as optim
 from torch.utils.data import DataLoader
@@ -30,15 +28,11 @@ from torchmetrics.functional.regression import (
     spearman_corrcoef
 )
 
-# Sklearn Imports
-# from sklearn.preprocessing import label_binarize
-# from sklearn.metrics import roc_auc_score, roc_curve, auc, accuracy_score
+# pingouin-stats
+import pingouin as pg
 
 # Project Imports
 from model_utilities import AM_SB, AM_MB, AM_SB_Regression
-
-# WandB Imports
-import wandb
 
 
 
@@ -329,3 +323,30 @@ def compute_metrics_per_clinical_subtype(checkpoint_dir, n_classes=2, fold=0):
             eval_metrics_info_df.to_csv(os.path.join(checkpoint_dir, f"{eval_name}_{c_subtype_name}_eval_metrics_info_kf{fold}.csv"))
             os.makedirs(os.path.join('results', label), exist_ok=True)
             eval_metrics_info_df.to_csv(os.path.join('results', label, f"{eval_name}_{c_subtype_name}_eval_metrics_info_kf{fold}.csv"))
+
+            # Build DataFrame for pingouin-stats
+            icc_samples = list()
+            icc_judges = list()
+            icc_scores = list()
+
+            for i, s in enumerate(list(y_pred_c.numpy())):
+                icc_samples.append(i)
+                icc_judges.append('A')
+                icc_scores.append(s)
+            
+            for j, c in enumerate(list(y_c.numpy())):
+                icc_samples.append(j)
+                icc_judges.append('B')
+                icc_scores.append(c)
+            
+            icc_data = {
+                'icc_samples':icc_samples,
+                'icc_judges':icc_judges,
+                'icc_scores':icc_scores
+            }
+            icc_data_df = pd.DataFrame.from_dict(icc_data)
+            
+            eval_icc = pg.intraclass_corr(data=icc_data_df, targets='icc_samples', raters='icc_judges', ratings='icc_scores').round(3)
+            eval_icc.to_csv(os.path.join(checkpoint_dir, f"{eval_name}_{c_subtype_name}_eval_icc_info_kf{fold}.csv"))
+            os.makedirs(os.path.join('results', label), exist_ok=True)
+            eval_icc.to_csv(os.path.join('results', label, f"{eval_name}_{c_subtype_name}_eval_icc_info_kf{fold}.csv"))
