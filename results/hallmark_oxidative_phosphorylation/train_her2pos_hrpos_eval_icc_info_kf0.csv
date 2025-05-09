@@ -1,0 +1,7 @@
+,Type,Description,ICC,F,df1,df2,pval,CI95%
+0,ICC1,Single raters absolute,0.62,4.261,123,124,0.0,[0.5  0.72]
+1,ICC2,Single random raters,0.623,4.446,123,123,0.0,[0.5  0.72]
+2,ICC3,Single fixed raters,0.633,4.446,123,123,0.0,[0.51 0.73]
+3,ICC1k,Average raters absolute,0.765,4.261,123,124,0.0,[0.67 0.84]
+4,ICC2k,Average random raters,0.768,4.446,123,123,0.0,[0.67 0.84]
+5,ICC3k,Average fixed raters,0.775,4.446,123,123,0.0,[0.68 0.84]
