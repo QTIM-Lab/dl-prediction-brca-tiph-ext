@@ -143,7 +143,7 @@ if __name__ == "__main__":
 
 
         # Test model
-        test_metrics, test_y_c, test_y_pred_c = test_pipeline(
+        test_metrics, test_y_c, test_y_pred_c, test_icc = test_pipeline(
             test_set=test_set,
             config_json=config_json,
             device=device,
@@ -163,7 +163,10 @@ if __name__ == "__main__":
             plt.clf()
             plt.close()
 
+            # Save ICC
+            test_icc.to_csv(os.path.join(args.checkpoint_dir, f"test_icc_kf{fold}.csv"))
+
         # Convert test metrics into a dataframe
         test_metrics_df = pd.DataFrame.from_dict(test_metrics)
         test_metrics_df.to_csv(os.path.join(args.checkpoint_dir, f"test_metrics_kf{fold}.csv"))
-        print(test_metrics_df)
+        # print(test_metrics_df)

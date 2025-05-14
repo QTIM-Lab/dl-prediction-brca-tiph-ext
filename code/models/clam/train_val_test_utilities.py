@@ -1,6 +1,7 @@
 # Imports
 import os
 import numpy as np
+import pandas as pd
 
 # PyTorch Imports
 import torch
@@ -29,9 +30,8 @@ from torchmetrics.functional.regression import (
     spearman_corrcoef
 )
 
-# Sklearn Imports
-# from sklearn.preprocessing import label_binarize
-# from sklearn.metrics import roc_auc_score, roc_curve, auc, accuracy_score
+# pingouin-stats
+import pingouin as pg
 
 # Project Imports
 from model_utilities import AM_SB, AM_MB, AM_SB_Regression
@@ -495,10 +495,33 @@ def test_pipeline(test_set, config_json, device, checkpoint_dir, fold):
         test_metrics["rse"] = [rse.item()]
         test_metrics["scc"] = [scc.item()]
 
+        # Build DataFrame for pingouin-stats
+        icc_samples = list()
+        icc_judges = list()
+        icc_scores = list()
+
+        for i, s in enumerate(list(test_y_pred_c.numpy())):
+            icc_samples.append(i)
+            icc_judges.append('A')
+            icc_scores.append(s)
+        
+        for j, c in enumerate(list(test_y_c.numpy())):
+            icc_samples.append(j)
+            icc_judges.append('B')
+            icc_scores.append(c)
+        
+        icc_data = {
+            'icc_samples':icc_samples,
+            'icc_judges':icc_judges,
+            'icc_scores':icc_scores
+        }
+        icc_data_df = pd.DataFrame.from_dict(icc_data)
+        test_icc = pg.intraclass_corr(data=icc_data_df, targets='icc_samples', raters='icc_judges', ratings='icc_scores').round(3)
+        
     if task_type == "regression":
-        return test_metrics, test_y_c.numpy(), test_y_pred_c.numpy()
+        return test_metrics, test_y_c.numpy(), test_y_pred_c.numpy(), test_icc
     else:
-        return test_metrics, None, None
+        return test_metrics, None, None, None
 
 
 
