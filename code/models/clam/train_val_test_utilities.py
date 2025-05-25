@@ -2,6 +2,7 @@
 import os
 import numpy as np
 import pandas as pd
+from tqdm import tqdm
 
 # PyTorch Imports
 import torch
@@ -226,8 +227,76 @@ def train_val_pipeline(datasets, config_json, device, experiment_dir, checkpoint
 
 
 
+# Function: Perform bootstrap analysis
+def bootstrap_analysis(y_true, y_pred, metric_value, task='binary', metric_name='accuracy', bins=1000, confidence=0.95):
+    """
+    Perform bootstrap analysis to calculate confidence intervals for a given metric.
+
+    Parameters
+    ----------
+    y_true : array-like
+        Ground truth values
+    y_pred : array-like
+        Predicted values
+    metric_fn : callable
+        Function to calculate the metric
+    metric_name : str, optional
+        Name of the metric for progress display, by default ""
+    bins : int, optional
+        Number of bootstrap samples, by default 1000
+    confidence : float, optional
+        Confidence level for the interval, by default 0.95
+
+    Returns
+    -------
+    dict
+        Dictionary containing the metric value, lower bound, and upper bound
+    """
+    n = len(y_true)
+    results = []
+
+    # Use tqdm to show progress
+    desc = f"Bootstrap analysis for {metric_name}" if metric_name else "Bootstrap analysis"
+    for _ in tqdm(range(bins), desc=desc):
+        # Generate bootstrap sample indices
+        indices = np.random.choice(n, n, replace=True)
+
+        # Calculate metric on bootstrap sample
+        bootstrap_true = y_true[indices]
+        bootstrap_pred = y_pred[indices]
+
+        if metric_name == "accuracy":
+            result = accuracy(preds=bootstrap_pred, target=bootstrap_true, task=task)
+        elif metric_name == "f1_score":
+            result = f1_score(preds=bootstrap_pred, target=bootstrap_true, task=task)
+        elif metric_name == "precision":
+            result = precision(preds=bootstrap_pred, target=bootstrap_true, task=task)
+        elif metric_name == "recall":
+            result = recall(preds=bootstrap_pred, target=bootstrap_true, task=task)
+        elif metric_name == "auroc":
+            result = auroc(preds=bootstrap_pred, target=bootstrap_true, task=task)
+        elif metric_name == "mean_squared_error":
+            result = mean_squared_error(preds=bootstrap_pred, target=bootstrap_true)
+        elif metric_name == "pearson_corrcoef":
+            result = pearson_corrcoef(preds=bootstrap_pred, target=bootstrap_true)
+        
+        results.append(result)
+
+    # Calculate confidence interval
+    alpha = (1 - confidence) / 2
+    lower_bound = np.percentile(results, alpha * 100)
+    upper_bound = np.percentile(results, (1 - alpha) * 100)
+
+    return {
+        'value': metric_value,
+        'lower_bound': lower_bound,
+        'upper_bound': upper_bound
+    }
+
+
+
 # Function: Test Model Pipeline
-def test_pipeline(test_set, config_json, device, checkpoint_dir, fold):
+def test_pipeline(test_set, config_json, device, checkpoint_dir, fold, bts_nbins):
 
     # Load the parameters from the configuration JSON
     n_classes = config_json["data"]["n_classes"]
@@ -346,6 +415,7 @@ def test_pipeline(test_set, config_json, device, checkpoint_dir, fold):
 
 
     # Compute metrics
+    bootstrap_metrics = {}
     test_y_pred = torch.from_numpy(np.array(test_y_pred))
     test_y = torch.from_numpy(np.array(test_y))
     test_y_pred_proba = torch.from_numpy(np.array(test_y_pred_proba))
@@ -383,6 +453,12 @@ def test_pipeline(test_set, config_json, device, checkpoint_dir, fold):
             task='binary'
         )
 
+        # Calculate bootstrap metrics for classification
+        bootstrap_metrics['acc'] = bootstrap_analysis(test_y, test_y_pred, acc, task='binary', metric_name="accuracy", bins=bts_nbins)
+        bootstrap_metrics['f1'] = bootstrap_analysis(test_y, test_y_pred, f1, task='binary', metric_name="f1_score", bins=bts_nbins)
+        bootstrap_metrics['prec'] = bootstrap_analysis(test_y, test_y_pred, prec, task='binary', metric_name="precision", bins=bts_nbins)
+        bootstrap_metrics['rec'] = bootstrap_analysis(test_y, test_y_pred, rec, task='binary', metric_name="recall", bins=bts_nbins)
+
 
         # Note: Original implementation uses softmax for 2 classes, so we need to compute AUROC this way
         if task_type == "classification":
@@ -398,6 +474,7 @@ def test_pipeline(test_set, config_json, device, checkpoint_dir, fold):
                 target=test_y,
                 task='binary'
             )
+            bootstrap_metrics['auc'] = bootstrap_analysis(test_y, test_y_pred_proba, auc, task='binary', metric_name="auroc", bins=bts_nbins)
 
     else:
         acc = accuracy(
@@ -445,6 +522,7 @@ def test_pipeline(test_set, config_json, device, checkpoint_dir, fold):
             preds=test_y_pred_c,
             target=test_y_c
         )
+        bootstrap_metrics['mse'] = bootstrap_analysis(test_y_c, test_y_pred_c, mse, metric_name="mean_squared_error", bins=bts_nbins)
 
         ccc = concordance_corrcoef(
             preds=test_y_pred_c,
@@ -460,6 +538,7 @@ def test_pipeline(test_set, config_json, device, checkpoint_dir, fold):
             preds=test_y_pred_c,
             target=test_y_c
         )
+        bootstrap_metrics['pcc'] = bootstrap_analysis(test_y_c, test_y_pred_c, pcc, metric_name="pearson_corrcoef", bins=bts_nbins)
 
         r2s = r2_score(
             preds=test_y_pred_c,
@@ -517,11 +596,12 @@ def test_pipeline(test_set, config_json, device, checkpoint_dir, fold):
         }
         icc_data_df = pd.DataFrame.from_dict(icc_data)
         test_icc = pg.intraclass_corr(data=icc_data_df, targets='icc_samples', raters='icc_judges', ratings='icc_scores').round(3)
-        
+
+
     if task_type == "regression":
-        return test_metrics, test_y_c.numpy(), test_y_pred_c.numpy(), test_icc
+        return test_metrics, test_y_c.numpy(), test_y_pred_c.numpy(), test_icc, bootstrap_metrics
     else:
-        return test_metrics, None, None, None
+        return test_metrics, None, None, None, bootstrap_metrics
 
 
 

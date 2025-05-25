@@ -53,6 +53,7 @@ if __name__ == "__main__":
     parser.add_argument('--base_data_path', type=str, required=True, help='Base data path for TCGA-BRCA dataset.')
     parser.add_argument('--experimental_strategy', type=str, choices=['All', 'DiagnosticSlide', 'TissueSlide'], required=True, help="The experimental strategy for the TCGA-BRCA dataset.")
     parser.add_argument('--features_h5_dir', nargs='+', type=str, required=True, help="The directory of the features in .pt format for the TCGA-BRCA dataset.")
+    parser.add_argument('--bts_nbins', type=int, default=1000, help='Number of bootstrap samples (default: 1000).')
     args = parser.parse_args()
 
 
@@ -143,12 +144,13 @@ if __name__ == "__main__":
 
 
         # Test model
-        test_metrics, test_y_c, test_y_pred_c, test_icc = test_pipeline(
+        test_metrics, test_y_c, test_y_pred_c, test_icc, test_bootstrap = test_pipeline(
             test_set=test_set,
             config_json=config_json,
             device=device,
             checkpoint_dir=args.checkpoint_dir,
-            fold=fold
+            fold=fold,
+            bts_nbins=args.bts_nbins
         )
         if task_type == "regression":
             plt.title("Regression "+ args.checkpoint_dir.split('/')[-2])
@@ -170,3 +172,16 @@ if __name__ == "__main__":
         test_metrics_df = pd.DataFrame.from_dict(test_metrics)
         test_metrics_df.to_csv(os.path.join(args.checkpoint_dir, f"test_metrics_kf{fold}.csv"))
         # print(test_metrics_df)
+
+         # Convert bootstrap metrics to DataFrame
+        bootstrap_df = pd.DataFrame()
+
+        for metric_name, metric_data in test_bootstrap.items():
+            bootstrap_df.loc[0, f"{metric_name}"] = metric_data['value']
+            bootstrap_df.loc[0, f"{metric_name}_lower"] = metric_data['lower_bound']
+            bootstrap_df.loc[0, f"{metric_name}_upper"] = metric_data['upper_bound']
+
+        # Save bootstrap metrics
+        bootstrap_df.to_csv(os.path.join(args.checkpoint_dir, f"bootstrap_metrics_kf{fold}.csv"))
+        # print("Bootstrap Metrics:")
+        # print(bootstrap_df)
