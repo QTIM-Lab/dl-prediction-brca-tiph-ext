@@ -454,10 +454,10 @@ def test_pipeline(test_set, config_json, device, checkpoint_dir, fold, bts_nbins
         )
 
         # Calculate bootstrap metrics for classification
-        bootstrap_metrics['acc'] = bootstrap_analysis(test_y, test_y_pred, acc, task='binary', metric_name="accuracy", bins=bts_nbins)
-        bootstrap_metrics['f1'] = bootstrap_analysis(test_y, test_y_pred, f1, task='binary', metric_name="f1_score", bins=bts_nbins)
-        bootstrap_metrics['prec'] = bootstrap_analysis(test_y, test_y_pred, prec, task='binary', metric_name="precision", bins=bts_nbins)
-        bootstrap_metrics['rec'] = bootstrap_analysis(test_y, test_y_pred, rec, task='binary', metric_name="recall", bins=bts_nbins)
+        bootstrap_metrics['acc'] = bootstrap_analysis(test_y, test_y_pred, acc.item(), task='binary', metric_name="accuracy", bins=bts_nbins)
+        bootstrap_metrics['f1'] = bootstrap_analysis(test_y, test_y_pred, f1.item(), task='binary', metric_name="f1_score", bins=bts_nbins)
+        bootstrap_metrics['prec'] = bootstrap_analysis(test_y, test_y_pred, prec.item(), task='binary', metric_name="precision", bins=bts_nbins)
+        bootstrap_metrics['rec'] = bootstrap_analysis(test_y, test_y_pred, rec.item(), task='binary', metric_name="recall", bins=bts_nbins)
 
 
         # Note: Original implementation uses softmax for 2 classes, so we need to compute AUROC this way
@@ -474,7 +474,7 @@ def test_pipeline(test_set, config_json, device, checkpoint_dir, fold, bts_nbins
                 target=test_y,
                 task='binary'
             )
-            bootstrap_metrics['auc'] = bootstrap_analysis(test_y, test_y_pred_proba, auc, task='binary', metric_name="auroc", bins=bts_nbins)
+            bootstrap_metrics['auc'] = bootstrap_analysis(test_y, test_y_pred_proba, auc.item(), task='binary', metric_name="auroc", bins=bts_nbins)
 
     else:
         acc = accuracy(
@@ -522,7 +522,7 @@ def test_pipeline(test_set, config_json, device, checkpoint_dir, fold, bts_nbins
             preds=test_y_pred_c,
             target=test_y_c
         )
-        bootstrap_metrics['mse'] = bootstrap_analysis(test_y_c, test_y_pred_c, mse, metric_name="mean_squared_error", bins=bts_nbins)
+        bootstrap_metrics['mse'] = bootstrap_analysis(test_y_c, test_y_pred_c, mse.item(), metric_name="mean_squared_error", bins=bts_nbins)
 
         ccc = concordance_corrcoef(
             preds=test_y_pred_c,
@@ -538,7 +538,7 @@ def test_pipeline(test_set, config_json, device, checkpoint_dir, fold, bts_nbins
             preds=test_y_pred_c,
             target=test_y_c
         )
-        bootstrap_metrics['pcc'] = bootstrap_analysis(test_y_c, test_y_pred_c, pcc, metric_name="pearson_corrcoef", bins=bts_nbins)
+        bootstrap_metrics['pcc'] = bootstrap_analysis(test_y_c, test_y_pred_c, pcc.item(), metric_name="pearson_corrcoef", bins=bts_nbins)
 
         r2s = r2_score(
             preds=test_y_pred_c,
