@@ -280,7 +280,7 @@ def bootstrap_analysis(y_true, y_pred, metric_value, task='binary', metric_name=
         elif metric_name == "pearson_corrcoef":
             result = pearson_corrcoef(preds=bootstrap_pred, target=bootstrap_true)
         
-        results.append(result)
+        results.append(result.item())
 
     # Calculate confidence interval
     alpha = (1 - confidence) / 2
