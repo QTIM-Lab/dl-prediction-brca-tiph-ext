@@ -2,10 +2,15 @@
 import os
 import pandas as pd
 import h5py
-import numpy as np  # For random selection in augmentation
+import numpy as np
+
+# PyTorch Imports
 import torch
 from torch.utils.data import Dataset
+
+# sklearn Imports
 from sklearn.model_selection import GroupShuffleSplit
+
 
 
 # Class: TCGABRCA_MIL_Dataset
