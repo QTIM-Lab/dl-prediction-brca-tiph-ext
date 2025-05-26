@@ -53,8 +53,8 @@ do
     --experimental_strategy 'All' \
     --features_h5_dir '/autofs/space/crater_001/projects/breast-cancer-pathology/results/CONCH/TCGA-BRCA/mmxbrcp/DiagnosticSlide/SegmentationHistoQC/features' '/autofs/space/crater_001/projects/breast-cancer-pathology/results/CONCH/TCGA-BRCA/mmxbrcp/TissueSlide/SegmentationHistoQC/features' \
     --label $label \
-    --config_json 'code/models/clam/config/regression/tcgabrca_conch_fts_am_sb_config.json'
+    --config_json 'code/models/clam/config/tcgabrca_conch_fts_am_sb_config.json'
 done
 
 
-echo 'Finished AM-SB (Regression) Training on TCGA-BRCA Database.'
+echo 'Finished AM-SB (Classification) Training on TCGA-BRCA Database.'
