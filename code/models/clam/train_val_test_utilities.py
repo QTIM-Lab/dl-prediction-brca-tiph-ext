@@ -267,20 +267,50 @@ def bootstrap_analysis(y_true, y_pred, metric_value, task='binary', metric_name=
 
         if metric_name == "accuracy":
             result = accuracy(preds=bootstrap_pred, target=bootstrap_true, task=task)
+            result = result.item()
         elif metric_name == "f1_score":
             result = f1_score(preds=bootstrap_pred, target=bootstrap_true, task=task)
+            result = result.item()
         elif metric_name == "precision":
             result = precision(preds=bootstrap_pred, target=bootstrap_true, task=task)
+            result = result.item()
         elif metric_name == "recall":
             result = recall(preds=bootstrap_pred, target=bootstrap_true, task=task)
+            result = result.item()
         elif metric_name == "auroc":
             result = auroc(preds=bootstrap_pred, target=bootstrap_true, task=task)
+            result = result.item()
         elif metric_name == "mean_squared_error":
             result = mean_squared_error(preds=bootstrap_pred, target=bootstrap_true)
+            result = result.item()
         elif metric_name == "pearson_corrcoef":
             result = pearson_corrcoef(preds=bootstrap_pred, target=bootstrap_true)
-        
-        results.append(result.item())
+            result = result.item()
+        elif metric_name == "intraclass_corr":
+            icc_samples = list()
+            icc_judges = list()
+            icc_scores = list()
+
+            for i, s in enumerate(list(bootstrap_pred.numpy())):
+                icc_samples.append(i)
+                icc_judges.append('A')
+                icc_scores.append(s)
+            
+            for j, c in enumerate(list(bootstrap_true.numpy())):
+                icc_samples.append(j)
+                icc_judges.append('B')
+                icc_scores.append(c)
+            
+            icc_data = {
+                'icc_samples':icc_samples,
+                'icc_judges':icc_judges,
+                'icc_scores':icc_scores
+            }
+            icc_data_df = pd.DataFrame.from_dict(icc_data)
+            icc = pg.intraclass_corr(data=icc_data_df, targets='icc_samples', raters='icc_judges', ratings='icc_scores').round(3)
+            result = icc.values[2,2]
+
+        results.append(result)
 
     # Calculate confidence interval
     alpha = (1 - confidence) / 2
@@ -596,6 +626,7 @@ def test_pipeline(test_set, config_json, device, checkpoint_dir, fold, bts_nbins
         }
         icc_data_df = pd.DataFrame.from_dict(icc_data)
         test_icc = pg.intraclass_corr(data=icc_data_df, targets='icc_samples', raters='icc_judges', ratings='icc_scores').round(3)
+        bootstrap_metrics['icc'] = bootstrap_analysis(test_y_c, test_y_pred_c, test_icc.values[2,2], metric_name="intraclass_corr", bins=bts_nbins)
 
 
     if task_type == "regression":
