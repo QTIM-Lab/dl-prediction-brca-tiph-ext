@@ -264,6 +264,8 @@ class TCGABRCA_MIL_Dataset(Dataset):
     def select_split(self, split):
         assert split in ('train', 'validation', 'test')
         self.curr_split = split
+        if self.curr_split in ('validation', 'test'):
+            self.augment = False
         return
 
     def __len__(self):
