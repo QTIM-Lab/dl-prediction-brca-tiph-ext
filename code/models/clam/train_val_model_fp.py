@@ -131,7 +131,8 @@ if __name__ == "__main__":
                 label=args.label,
                 features_h5_dir=args.features_h5_dir,
                 n_folds=int(config_json["data"]["n_folds"]),
-                seed=int(args.seed)
+                seed=int(args.seed),
+                augment=config_json["augment"]
             )
         elif task_type == "clinical_subtype_classification":
             dataset = TCGABRCA_MIL_DatasetClinicalSubtype(
@@ -139,7 +140,8 @@ if __name__ == "__main__":
                 experimental_strategy=args.experimental_strategy,
                 features_h5_dir=args.features_h5_dir,
                 n_folds=int(config_json["data"]["n_folds"]),
-                seed=int(args.seed)
+                seed=int(args.seed),
+                augment=config_json["augment"]
             )
         elif task_type == "regression":
             dataset = TCGABRCA_MIL_DatasetRegression(
@@ -148,7 +150,8 @@ if __name__ == "__main__":
                     label=args.label,
                     features_h5_dir=args.features_h5_dir,
                     n_folds=int(config_json["data"]["n_folds"]),
-                    seed=int(args.seed)
+                    seed=int(args.seed),
+                    augment=config_json["augment"]
             )
 
         # Create the data splits from the original dataset

@@ -11,7 +11,7 @@ from sklearn.model_selection import GroupShuffleSplit
 # Class: TCGABRCA_MIL_Dataset
 class TCGABRCA_MIL_Dataset(Dataset):
     def __init__(self, base_data_path='TCGA-BRCA', experimental_strategy='All', label=None, features_h5_dir=None,
-                 train_size=0.70, val_size=0.15, test_size=0.15, n_folds=10, seed=42, transform=None):
+                 train_size=0.70, val_size=0.15, test_size=0.15, n_folds=10, seed=42, augment=True, transform=None):
         assert experimental_strategy in ('All', 'DiagnosticSlide', 'TissueSlide')
         assert features_h5_dir is not None
         assert label in (
@@ -84,6 +84,7 @@ class TCGABRCA_MIL_Dataset(Dataset):
         # Set label threshold
         self.label_threshold = 0
 
+        self.augment = augment
         self.transform = transform
 
         return
@@ -285,31 +286,28 @@ class TCGABRCA_MIL_Dataset(Dataset):
         with h5py.File(features_h5, "r") as f:
             features = f["features"][()]
 
-        # --- Slide-level augmentation decision ---
-        # With 20% probability, augment the slide; otherwise, use original features
-        if np.random.rand() < 0.2:
-            # --- Tile-level augmentation ---
-            # For 50% of the tiles, randomly select one option among 5 choices:
-            # the original and the 4 augmentation files.
+        # --- Data augmentation (same slide-level and tile-level strategy) -------------------- #
+        if self.augment:
+            assert self.curr_split == 'train'
+            # Changing a bit proba of augmenting to a uniform
+            # if np.random.rand() < self.augment_proba:
             folder = os.path.dirname(features_h5)
             options = ["original.h5", "hed_rs0.h5", "hed_rs1.h5", "hed_rs2.h5", "hed_rs3.h5"]
             n_tiles = features.shape[0]
-            tile_mask = np.random.rand(n_tiles) < 0.5  # 50% chance per tile (only in augmented slides)
+            tile_mask = np.random.rand(n_tiles) < 0.5
             if tile_mask.sum() > 0:
                 indices = np.where(tile_mask)[0]
-                # For each selected tile, choose one option uniformly at random
                 chosen_options = np.random.choice(options, size=len(indices))
                 for opt in np.unique(chosen_options):
                     opt_indices = indices[chosen_options == opt]
                     if opt == "original.h5":
-                        # If the chosen option is original, do nothing (tile remains as is)
                         continue
                     else:
                         aug_path = os.path.join(folder, opt)
                         with h5py.File(aug_path, "r") as f_aug:
                             features_aug = f_aug["features"][()]
                         features[opt_indices] = features_aug[opt_indices]
-        # -----------------------------------------
+        # ------------------------------------------------------------------------------------- #
         features = torch.from_numpy(features)
 
         # Get ssGSEA score and binarize based on threshold
@@ -340,9 +338,9 @@ class TCGABRCA_MIL_Dataset(Dataset):
 # Class: TCGABRCA_MIL_DatasetRegression
 class TCGABRCA_MIL_DatasetRegression(TCGABRCA_MIL_Dataset):
     def __init__(self, base_data_path='TCGA-BRCA', experimental_strategy='All', label=None, features_h5_dir=None,
-                 train_size=0.7, val_size=0.15, test_size=0.15, n_folds=10, seed=42, transform=None):
+                 train_size=0.7, val_size=0.15, test_size=0.15, n_folds=10, seed=42, augment=True, transform=None):
         super().__init__(base_data_path, experimental_strategy, label, features_h5_dir,
-                         train_size, val_size, test_size, n_folds, seed, transform)
+                         train_size, val_size, test_size, n_folds, seed, augment, transform)
         return
 
     def __getitem__(self, idx):
@@ -359,8 +357,11 @@ class TCGABRCA_MIL_DatasetRegression(TCGABRCA_MIL_Dataset):
         with h5py.File(features_h5, "r") as f:
             features = f["features"][()]
 
-        # --- Data augmentation (same slide-level and tile-level strategy) ---
-        if np.random.rand() < 0.2:
+        # --- Data augmentation (same slide-level and tile-level strategy) -------------------- #
+        if self.augment:
+            assert self.curr_split == 'train'
+            # Changing a bit proba of augmenting to a uniform
+            # if np.random.rand() < self.augment_proba:
             folder = os.path.dirname(features_h5)
             options = ["original.h5", "hed_rs0.h5", "hed_rs1.h5", "hed_rs2.h5", "hed_rs3.h5"]
             n_tiles = features.shape[0]
@@ -377,7 +378,7 @@ class TCGABRCA_MIL_DatasetRegression(TCGABRCA_MIL_Dataset):
                         with h5py.File(aug_path, "r") as f_aug:
                             features_aug = f_aug["features"][()]
                         features[opt_indices] = features_aug[opt_indices]
-        # ----------------------------------------------------
+        # ------------------------------------------------------------------------------------- #
         features = torch.from_numpy(features)
         ssgea_id = dataset_dict['ssgea_id'][idx]
         ssgsea_scores = dataset_dict['ssgsea_scores'][idx][self.ssgsea_scores_label_idx_dict[self.label]]
@@ -399,7 +400,7 @@ class TCGABRCA_MIL_DatasetRegression(TCGABRCA_MIL_Dataset):
 # Class: TCGABRCA_MIL_DatasetClinicalSubtype
 class TCGABRCA_MIL_DatasetClinicalSubtype(Dataset):
     def __init__(self, base_data_path='TCGA-BRCA', experimental_strategy='All', label=None, features_h5_dir=None,
-                 train_size=0.70, val_size=0.15, test_size=0.15, n_folds=10, seed=42, transform=None):
+                 train_size=0.70, val_size=0.15, test_size=0.15, n_folds=10, seed=42, augment=True, transform=None):
         assert experimental_strategy in ('All', 'DiagnosticSlide', 'TissueSlide')
         assert features_h5_dir is not None
         if label:
@@ -472,6 +473,7 @@ class TCGABRCA_MIL_DatasetClinicalSubtype(Dataset):
         self.dataset_dict, self.wsi_genex_label_dict, self.features_h5_dict = self.build_dataset_dicts()
         self.train_dict, self.val_dict, self.test_dict = self.split_dataset()
         self.label_threshold = 0
+        self.augment = augment
         self.transform = transform
 
         return
@@ -716,29 +718,28 @@ class TCGABRCA_MIL_DatasetClinicalSubtype(Dataset):
         with h5py.File(features_h5, "r") as f:
             features = f["features"][()]
 
-        # --- Slide-level augmentation decision ---
-        # With 20% probability, perform augmentation on this slide.
-        if np.random.rand() < 0.2:
-            # --- Tile-level augmentation ---
-            # For 50% of the tiles, choose randomly one option among 5: original, hed_rs0.h5, hed_rs1.h5, hed_rs2.h5, hed_rs3.h5.
+        # --- Data augmentation (same slide-level and tile-level strategy) -------------------- #
+        if self.augment:
+            assert self.curr_split == 'train'
+            # Changing a bit proba of augmenting to a uniform
+            # if np.random.rand() < self.augment_proba:
             folder = os.path.dirname(features_h5)
             options = ["original.h5", "hed_rs0.h5", "hed_rs1.h5", "hed_rs2.h5", "hed_rs3.h5"]
             n_tiles = features.shape[0]
-            tile_mask = np.random.rand(n_tiles) < 0.5  # 50% chance per tile (only for augmented slides)
+            tile_mask = np.random.rand(n_tiles) < 0.5
             if tile_mask.sum() > 0:
                 indices = np.where(tile_mask)[0]
                 chosen_options = np.random.choice(options, size=len(indices))
                 for opt in np.unique(chosen_options):
                     opt_indices = indices[chosen_options == opt]
                     if opt == "original.h5":
-                        # If original is chosen, leave the tile unchanged.
                         continue
                     else:
                         aug_path = os.path.join(folder, opt)
                         with h5py.File(aug_path, "r") as f_aug:
                             features_aug = f_aug["features"][()]
                         features[opt_indices] = features_aug[opt_indices]
-        # -----------------------------------------
+        # ------------------------------------------------------------------------------------- #
         features = torch.from_numpy(features)
 
         ssgea_id = dataset_dict['ssgea_id'][idx]
