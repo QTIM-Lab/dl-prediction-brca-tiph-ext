@@ -318,9 +318,10 @@ class TCGABRCA_MIL_Dataset(Dataset):
             ssgsea_scores = 1 if ssgsea_scores > self.label_threshold else 0
         else:
             ssgsea_scores = -1
-
-        c_subtype = dataset_dict['c_subtype'][idx]
-        c_subtype_label = dataset_dict['c_subtype_label'][idx]
+        
+        # TODO: Delete after running the models with success
+        # c_subtype = dataset_dict['c_subtype'][idx]
+        # c_subtype_label = dataset_dict['c_subtype_label'][idx]
 
         input_data_dict = {
             'case_id': case_id,
@@ -328,10 +329,14 @@ class TCGABRCA_MIL_Dataset(Dataset):
             'features_h5': features_h5,
             'features': features,
             'ssgea_id': ssgea_id,
-            'ssgsea_scores': ssgsea_scores,
-            'c_subtype': c_subtype,
-            'c_subtype_label': c_subtype_label
+            'ssgsea_scores': ssgsea_scores
         }
+
+        # TODO: Delete after running the models with success
+        #     'c_subtype': c_subtype,
+        #     'c_subtype_label': c_subtype_label
+        # }
+
         return input_data_dict
 
 
