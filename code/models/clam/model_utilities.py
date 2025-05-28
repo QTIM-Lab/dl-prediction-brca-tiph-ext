@@ -219,7 +219,7 @@ class AM_SB(nn.Module):
         y_proba_ = F.softmax(logits, dim=1)
         # print(y_proba_, y_proba_.shape)
         y_proba, _ = torch.max(y_proba_, dim=1)
-        # print(y_proba, y_proba.shape)
+        print(y_proba, y_proba.shape)
         y_pred = torch.argmax(y_proba_, dim=1)
 
         # Create a dictionary for the model outputs
