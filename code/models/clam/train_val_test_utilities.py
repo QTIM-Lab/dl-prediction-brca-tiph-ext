@@ -410,6 +410,7 @@ def test_pipeline(test_set, config_json, device, checkpoint_dir, fold, bts_nbins
     # Initialize variables 
     test_y_pred = list()
     test_y_pred_proba = list()
+    test_y_pred_proba_ = list()
     test_y_pred_c = list()
     test_y = list()
     test_y_c = list()
@@ -420,11 +421,12 @@ def test_pipeline(test_set, config_json, device, checkpoint_dir, fold, bts_nbins
         if task_type == "classification":
             features, ssgsea_scores = input_data_dict['features'].to(device), input_data_dict['ssgsea_scores'].to(device)
             output_dict = model(features)
-            logits, y_pred, y_proba = output_dict['logits'], output_dict['y_pred'], output_dict["y_proba"]
+            logits, y_pred, y_proba, y_proba_ = output_dict['logits'], output_dict['y_pred'], output_dict["y_proba"], output_dict["y_proba_"]
             test_y_pred_c.extend(list(logits.cpu().detach().numpy()))
             test_y_pred.extend(list(y_pred.cpu().detach().numpy()))
             test_y.extend(list(ssgsea_scores.cpu().detach().numpy()))
             test_y_pred_proba.extend(list(y_proba.cpu().detach().numpy()))
+            test_y_pred_proba_.append(list(y_proba_.cpu().detach().numpy()))
         
         elif task_type == "clinical_subtype_classification":
             features, c_subtypes = input_data_dict['features'].to(device), input_data_dict['c_subtype_label'].to(device)
@@ -452,6 +454,7 @@ def test_pipeline(test_set, config_json, device, checkpoint_dir, fold, bts_nbins
     test_y_pred = torch.from_numpy(np.array(test_y_pred))
     test_y = torch.from_numpy(np.array(test_y))
     test_y_pred_proba = torch.from_numpy(np.array(test_y_pred_proba))
+    test_y_pred_proba_ = torch.from_numpy(np.array(test_y_pred_proba_))
     if task_type == "regression":
         test_y_pred_c = torch.from_numpy(np.array(test_y_pred_c))
         test_y_c = torch.from_numpy(np.array(test_y_c))
@@ -497,6 +500,7 @@ def test_pipeline(test_set, config_json, device, checkpoint_dir, fold, bts_nbins
         # Note: Original implementation uses softmax for 2 classes, so we need to compute AUROC this way
         if task_type == "classification":
             print(test_y_pred_proba.shape, test_y.shape)
+            exit()
             auc = auroc(
                 preds=test_y_pred_c,
                 target=test_y,
