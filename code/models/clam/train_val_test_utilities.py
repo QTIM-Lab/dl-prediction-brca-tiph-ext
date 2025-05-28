@@ -457,8 +457,8 @@ def test_pipeline(test_set, config_json, device, checkpoint_dir, fold, bts_nbins
     test_y = torch.from_numpy(np.array(test_y))
     test_y_pred_proba = torch.from_numpy(np.array(test_y_pred_proba))
     test_y_pred_proba_ = torch.from_numpy(np.array(test_y_pred_proba_))
-    print(test_y_pred_proba_.shape, test_y_pred_proba_)
-    exit()
+    # print(test_y_pred_proba_.shape, test_y_pred_proba_)
+    
     if task_type == "regression":
         test_y_pred_c = torch.from_numpy(np.array(test_y_pred_c))
         test_y_c = torch.from_numpy(np.array(test_y_c))
@@ -503,10 +503,10 @@ def test_pipeline(test_set, config_json, device, checkpoint_dir, fold, bts_nbins
 
         # Note: Original implementation uses softmax for 2 classes, so we need to compute AUROC this way
         if task_type == "classification":
-            print(test_y_pred_proba.shape, test_y.shape)
+            print(test_y_pred_proba_.squeeze())
             exit()
             auc = auroc(
-                preds=test_y_pred_c,
+                preds=test_y_pred_proba_.squeeze(),
                 target=test_y,
                 num_classes=2,
                 task='multiclass'
