@@ -426,7 +426,7 @@ def test_pipeline(test_set, config_json, device, checkpoint_dir, fold, bts_nbins
             test_y_pred.extend(list(y_pred.cpu().detach().numpy()))
             test_y.extend(list(ssgsea_scores.cpu().detach().numpy()))
             test_y_pred_proba.extend(list(y_proba.cpu().detach().numpy()))
-            test_y_pred_proba_.append(list(y_proba_.cpu().detach().numpy()))
+            test_y_pred_proba_.append(y_proba_.cpu().detach().numpy())
             print(test_y_pred_proba_)
             exit()
         
