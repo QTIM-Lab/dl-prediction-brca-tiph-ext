@@ -16,7 +16,8 @@ CHECKPOINT_DIRS=('/autofs/space/crater_001/projects/breast-cancer-pathology/resu
  '/autofs/space/crater_001/projects/breast-cancer-pathology/results/CLAM/TCGA-BRCA/mmxbrcp/All/checkpoints/immunosuppression/2025-05-27_10-01-17' \
  '/autofs/space/crater_001/projects/breast-cancer-pathology/results/CLAM/TCGA-BRCA/mmxbrcp/All/checkpoints/hallmark_oxidative_phosphorylation/2025-05-26_15-24-15' \
  '/autofs/space/crater_001/projects/breast-cancer-pathology/results/CLAM/TCGA-BRCA/mmxbrcp/All/checkpoints/gobp_t_cell_mediated_cytotoxicity/2025-05-27_00-50-42')
- 
+
+
 
 for checkpoint_dir in "${CHECKPOINT_DIRS[@]}"
 do
