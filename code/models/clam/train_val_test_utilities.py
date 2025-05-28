@@ -427,6 +427,7 @@ def test_pipeline(test_set, config_json, device, checkpoint_dir, fold, bts_nbins
             test_y.extend(list(ssgsea_scores.cpu().detach().numpy()))
             test_y_pred_proba.extend(list(y_proba.cpu().detach().numpy()))
             test_y_pred_proba_.append(list(y_proba_.cpu().detach().numpy()))
+            print(test_y_pred_proba_)
         
         elif task_type == "clinical_subtype_classification":
             features, c_subtypes = input_data_dict['features'].to(device), input_data_dict['c_subtype_label'].to(device)
