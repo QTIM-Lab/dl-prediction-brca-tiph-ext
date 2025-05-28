@@ -1,5 +1,11 @@
 #!/bin/bash
 
+
+
+export PYENV_VERSION=mmxbrcp
+export LD_LIBRARY_PATH="/autofs/space/crater_001/tools/usr/lib64:${LD_LIBRARY_PATH}"
+export CUDA_VISIBLE_DEVICES=MIG-9da92e11-39d7-52cc-b236-d31910a71f67
+
 echo 'Started CLAM Testing on TCGA-BRCA Database.'
 
 
