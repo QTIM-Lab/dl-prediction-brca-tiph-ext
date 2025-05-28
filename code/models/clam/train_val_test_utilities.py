@@ -503,15 +503,14 @@ def test_pipeline(test_set, config_json, device, checkpoint_dir, fold, bts_nbins
 
         # Note: Original implementation uses softmax for 2 classes, so we need to compute AUROC this way
         if task_type == "classification":
-            print(test_y_pred_proba_.squeeze().shape)
-            exit()
+            # print(test_y_pred_proba_.squeeze().shape)
             auc = auroc(
                 preds=test_y_pred_proba_.squeeze(),
                 target=test_y,
                 num_classes=2,
                 task='multiclass'
             )
-            bootstrap_metrics['auc'] = bootstrap_analysis(test_y, test_y_pred_proba, auc.item(), task='multiclass', metric_name="auroc-clf-2c", bins=bts_nbins)
+            bootstrap_metrics['auc'] = bootstrap_analysis(test_y, test_y_pred_proba_.squeeze(), auc.item(), task='multiclass', metric_name="auroc-clf-2c", bins=bts_nbins)
 
         else:
             auc = auroc(
