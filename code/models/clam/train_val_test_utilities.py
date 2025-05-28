@@ -427,8 +427,8 @@ def test_pipeline(test_set, config_json, device, checkpoint_dir, fold, bts_nbins
             test_y.extend(list(ssgsea_scores.cpu().detach().numpy()))
             test_y_pred_proba.extend(list(y_proba.cpu().detach().numpy()))
             test_y_pred_proba_.append(y_proba_.cpu().detach().numpy())
-            print(test_y_pred_proba_)
-            exit()
+            # print(test_y_pred_proba_)
+
         
         elif task_type == "clinical_subtype_classification":
             features, c_subtypes = input_data_dict['features'].to(device), input_data_dict['c_subtype_label'].to(device)
@@ -457,6 +457,8 @@ def test_pipeline(test_set, config_json, device, checkpoint_dir, fold, bts_nbins
     test_y = torch.from_numpy(np.array(test_y))
     test_y_pred_proba = torch.from_numpy(np.array(test_y_pred_proba))
     test_y_pred_proba_ = torch.from_numpy(np.array(test_y_pred_proba_))
+    print(test_y_pred_proba_.shape, test_y_pred_proba_)
+    exit()
     if task_type == "regression":
         test_y_pred_c = torch.from_numpy(np.array(test_y_pred_c))
         test_y_c = torch.from_numpy(np.array(test_y_c))
