@@ -52,4 +52,5 @@ for cnt in img_count_values:
         if i_cnt == cnt:
             cnt_dict[cnt].append(i_name)
     cnt_dict_df = pd.DataFrame.from_dict(cnt_dict)
-    cnt_dict_df.to_csv(f"common_results_idx{cnt}.csv", index=False)
+    print(cnt_dict_df)
+    # cnt_dict_df.to_csv(f"common_results_idx{cnt}.csv", index=False)
