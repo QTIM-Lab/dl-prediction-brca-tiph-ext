@@ -30,7 +30,7 @@ for path_ in paths_to_assess:
     for case_ in cases:
         case__contents = [c for c in os.listdir(os.path.join(path_, case_)) if not c.startswith('.')]
         if len(case__contents) >= 1:
-            print(case_)
+            # print(case_)
             if case_ not in case_counts.keys():
                 case_counts[case_] = 1
             else:
@@ -54,6 +54,7 @@ for cnt in img_count_values:
     cnt_dict = {cnt:list()}
     for i_cnt, i_name in image_counts_inv.items():
         if i_cnt == cnt:
+            print(i_name)
             cnt_dict[cnt].append(i_name)
     cnt_dict_df = pd.DataFrame.from_dict(cnt_dict)
     print(cnt_dict_df)
