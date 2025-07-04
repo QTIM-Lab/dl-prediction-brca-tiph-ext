@@ -159,4 +159,4 @@ for cnt in img_count_values:
     cnt_dict_df = pd.DataFrame.from_dict(cnt_dict)
     # print(cnt_dict_df)
     os.makedirs('common_results', exist_ok=True)
-    cnt_dict_df.to_csv(f"'common_results/common_results_idx{cnt}.csv", index=False)
+    cnt_dict_df.to_csv(f"common_results/common_results_idx{cnt}.csv", index=False)
