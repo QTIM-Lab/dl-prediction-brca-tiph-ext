@@ -68,7 +68,7 @@ for cnt in img_count_values:
         if i_cnt == cnt:
             # print(i_name)
             for fpath in i_name:
-                cnt_dict[cnt].append(fpath)
+                cnt_dict['wsi'].append(fpath)
 
                 # Check where we have these heatmaps
                 # Angiogenesis
