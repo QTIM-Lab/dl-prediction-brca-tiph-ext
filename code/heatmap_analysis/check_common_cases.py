@@ -36,7 +36,6 @@ for path_ in paths_to_assess:
             else:
                 case_counts[case_] += 1
 
-exit()
 # Get image names that are common to the n CSVs that we loaded
 image_counts_inv = dict()
 for img_name, img_count in case_counts.items():
@@ -50,6 +49,7 @@ for img_name, img_count in case_counts.items():
 print(image_counts_inv)
 img_count_values = [k for k in image_counts_inv.keys()]
 print(img_count_values)
+exit()
 for cnt in img_count_values:
     cnt_dict = {cnt:list()}
     for i_cnt, i_name in image_counts_inv.items():
