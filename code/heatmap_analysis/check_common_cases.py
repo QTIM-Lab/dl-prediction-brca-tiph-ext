@@ -58,5 +58,5 @@ for cnt in img_count_values:
             for fpath in i_name:
                 cnt_dict[cnt].append(fpath)
     cnt_dict_df = pd.DataFrame.from_dict(cnt_dict)
-    print(cnt_dict_df)
-    # cnt_dict_df.to_csv(f"common_results_idx{cnt}.csv", index=False)
+    # print(cnt_dict_df)
+    cnt_dict_df.to_csv(f"common_results_idx{cnt}.csv", index=False)
