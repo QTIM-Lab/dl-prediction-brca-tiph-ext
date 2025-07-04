@@ -46,10 +46,10 @@ for img_name, img_count in case_counts.items():
     else:
         image_counts_inv[img_count].append(img_name)
 
-print(image_counts_inv)
+# print(image_counts_inv)
 img_count_values = [k for k in image_counts_inv.keys()]
-print(img_count_values)
-exit()
+# print(img_count_values)
+
 for cnt in img_count_values:
     cnt_dict = {cnt:list()}
     for i_cnt, i_name in image_counts_inv.items():
