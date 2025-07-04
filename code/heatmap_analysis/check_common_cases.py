@@ -44,6 +44,7 @@ for img_name, img_count in case_counts.items():
     else:
         image_counts_inv[img_count].append(img_name)
 
+print(image_counts_inv)
 img_count_values = [k for k in image_counts_inv.keys()]
 print(img_count_values)
 for cnt in img_count_values:
