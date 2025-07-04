@@ -95,25 +95,34 @@ for cnt in img_count_values:
 
                 # Check where we have these heatmaps
                 # Angiogenesis
-                a = [c for c in os.listdir(os.path.join(paths_to_assess[0], fpath)) if not c.startswith('.')]
+                if os.path.exists(os.path.join(paths_to_assess[0], fpath)):
+                    a = [c for c in os.listdir(os.path.join(paths_to_assess[0], fpath)) if not c.startswith('.')]
+                else:
+                    a = list()
                 if len(a) >= 1:
                     cnt_dict['has_angiogenesis'].append(1)
-                    cnt_dict['angiogenesis_path'].append(os.path.join(paths_to_assess[1], fpath))
+                    cnt_dict['angiogenesis_path'].append(os.path.join(paths_to_assess[0], fpath))
                 else:
                     cnt_dict['has_angiogenesis'].append(0)
                     cnt_dict['angiogenesis_path'].append('')
                 
                 # Cell Cyle
-                cc = [c for c in os.listdir(os.path.join(paths_to_assess[1], fpath)) if not c.startswith('.')]
+                if os.path.exists(os.path.join(paths_to_assess[1], fpath)):
+                    cc = [c for c in os.listdir(os.path.join(paths_to_assess[1], fpath)) if not c.startswith('.')]
+                else:
+                    cc = list()
                 if len(cc) >= 1:
                     cnt_dict['has_cell_cycle'].append(1)
-                    cnt_dict['cell_cycle_path'].append(os.path.join(paths_to_assess[3], fpath))
+                    cnt_dict['cell_cycle_path'].append(os.path.join(paths_to_assess[1], fpath))
                 else:
                     cnt_dict['has_cell_cycle'].append(0)
                     cnt_dict['cell_cycle_path'].append('')
                 
                 # Epithelial Mesenchymal Transition
-                emt = [c for c in os.listdir(os.path.join(paths_to_assess[2], fpath)) if not c.startswith('.')]
+                if os.path.exists(os.path.join(paths_to_assess[2], fpath)):
+                    emt = [c for c in os.listdir(os.path.join(paths_to_assess[2], fpath)) if not c.startswith('.')]
+                else:
+                    emt = list()
                 if len(emt) >= 1:
                     cnt_dict['has_epithelial_mesenchymal_transition'].append(1)
                     cnt_dict['epithelial_mesenchymal_transition_path'].append(os.path.join(paths_to_assess[2], fpath))
@@ -122,19 +131,25 @@ for cnt in img_count_values:
                     cnt_dict['epithelial_mesenchymal_transition_path'].append('')
                 
                 # Immunosuppression
-                imm = [c for c in os.listdir(os.path.join(paths_to_assess[3], fpath)) if not c.startswith('.')]
+                if os.path.exists(os.path.join(paths_to_assess[3], fpath)):
+                    imm = [c for c in os.listdir(os.path.join(paths_to_assess[3], fpath)) if not c.startswith('.')]
+                else:
+                    imm = list()
                 if len(imm) >= 1:
                     cnt_dict['has_immunosuppression'].append(1)
-                    cnt_dict['immunosuppression_path'].append(os.path.join(paths_to_assess[4], fpath))
+                    cnt_dict['immunosuppression_path'].append(os.path.join(paths_to_assess[3], fpath))
                 else:
                     cnt_dict['has_immunosuppression'].append(0)
                     cnt_dict['immunosuppression_path'].append('')
                 
                 # T Cell Mediated Cytotoxicity
-                tcm = [c for c in os.listdir(os.path.join(paths_to_assess[4], fpath)) if not c.startswith('.')]
+                if os.path.exists(os.path.join(paths_to_assess[4], fpath)):
+                    tcm = [c for c in os.listdir(os.path.join(paths_to_assess[4], fpath)) if not c.startswith('.')]
+                else:
+                    tcm = list()
                 if len(tcm) >= 1:
                     cnt_dict['has_t_cell_mediated_cytotoxicity'].append(1)
-                    cnt_dict['t_cell_mediated_cytotoxicity_path'].append(os.path.join(paths_to_assess[0], fpath))
+                    cnt_dict['t_cell_mediated_cytotoxicity_path'].append(os.path.join(paths_to_assess[4], fpath))
                 else:
                     cnt_dict['has_t_cell_mediated_cytotoxicity'].append(0)
                     cnt_dict['t_cell_mediated_cytotoxicity_path'].append('')
