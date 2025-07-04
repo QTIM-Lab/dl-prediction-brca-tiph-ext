@@ -28,12 +28,15 @@ for path_ in paths_to_assess:
 
     # Count these values
     for case_ in cases:
-        if case_ not in case_counts.keys():
-            case_counts[case_] = 1
-        else:
-            case_counts[case_] += 1
+        case__contents = [c for c in os.listdir(os.path.join(path_, case_)) if not c.startswith('.')]
+        if len(case__contents) >= 1:
+            print(case_)
+            if case_ not in case_counts.keys():
+                case_counts[case_] = 1
+            else:
+                case_counts[case_] += 1
 
-
+exit()
 # Get image names that are common to the n CSVs that we loaded
 image_counts_inv = dict()
 for img_name, img_count in case_counts.items():
