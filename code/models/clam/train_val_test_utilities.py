@@ -323,7 +323,8 @@ def bootstrap_analysis(y_true, y_pred, metric_value, task='binary', metric_name=
     return {
         'value': metric_value,
         'lower_bound': lower_bound,
-        'upper_bound': upper_bound
+        'upper_bound': upper_bound,
+        'results':results
     }
 
 

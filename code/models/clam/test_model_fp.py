@@ -180,6 +180,11 @@ if __name__ == "__main__":
             bootstrap_df.loc[0, f"{metric_name}"] = metric_data['value']
             bootstrap_df.loc[0, f"{metric_name}_lower"] = metric_data['lower_bound']
             bootstrap_df.loc[0, f"{metric_name}_upper"] = metric_data['upper_bound']
+            metric_results = metric_data['results']
+            metric_results_df = pd.DataFrame.from_dict(
+                {'results':metric_results}
+            )
+            metric_results_df.to_csv(os.path.join(args.checkpoint_dir, f"bootstrap_results_{metric_name}_kf{fold}.csv"))
 
         # Save bootstrap metrics
         bootstrap_df.to_csv(os.path.join(args.checkpoint_dir, f"bootstrap_metrics_kf{fold}.csv"))
