@@ -61,7 +61,7 @@ do
     echo "Started CLAM Heatmap Generation for checkpoint: $checkpoint_dir"
     
     # CLAM Features
-    python code/models/clam/create_heatmaps_fp_clinicians.py \
+    python code/models/clam/create_heatmaps_fp_clinical_relevance.py \
     --clinicians_dir '/autofs/space/crater_001/projects/breast-cancer-pathology/albert/clinicians' \
     --researchers_dir '/autofs/space/crater_001/projects/breast-cancer-pathology/albert/researchers' \
     --common_results_csv 'common_results/common_results_idx5.csv' \
