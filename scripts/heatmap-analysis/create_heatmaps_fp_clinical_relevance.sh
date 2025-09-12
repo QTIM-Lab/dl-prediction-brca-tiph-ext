@@ -64,7 +64,7 @@ do
     python code/models/clam/create_heatmaps_fp_clinical_relevance.py \
     --clinicians_dir '/autofs/space/crater_001/projects/breast-cancer-pathology/albert/clinicians' \
     --researchers_dir '/autofs/space/crater_001/projects/breast-cancer-pathology/albert/researchers' \
-    --common_results_csv 'results/common_results/common_results_idx5.csv' \
+    --common_results_csv 'results/common_results/pos/common_results_idx5.csv' \
     --gpu_id -1 \
     --checkpoint_dir $checkpoint_dir \
     --dataset 'TCGA-BRCA' \
