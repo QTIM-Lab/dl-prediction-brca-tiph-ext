@@ -16,7 +16,7 @@ import pandas as pd
 
 
 
-POS = False
+POS = True
 paths_to_assess_pos = [
     '/autofs/space/crater_001/projects/breast-cancer-pathology/analysis/heatmaps/pos/angiogenesis',
     '/autofs/space/crater_001/projects/breast-cancer-pathology/analysis/heatmaps/pos/cell_cycle',

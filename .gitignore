@@ -168,3 +168,6 @@ wandb/
 # Directories
 organise/
 reg_plots/
+
+# VSCode
+.vscode/
