@@ -7,7 +7,6 @@ import numpy as np
 import random
 import json
 import copy
-import matplotlib.pyplot as plt
 
 # PyTorch Imports
 import torch
@@ -83,7 +82,7 @@ if __name__ == "__main__":
         task_type = "classification"
         config_json["task_type"] = "classification"
 
-    
+
     # Load data
     print('Loading dataset...')
     label = args.checkpoint_dir.split('/')[-2]
@@ -118,7 +117,7 @@ if __name__ == "__main__":
 
         if verbose:
             print(f"Current Fold {fold+1}/{n_folds}")
-        
+
 
         # Select folds in the database
         train_set.select_fold(fold=fold),
@@ -126,7 +125,7 @@ if __name__ == "__main__":
         test_set.select_fold(fold=fold)
 
         for eval_set, eval_name in zip((train_set, val_set, test_set),('train', 'val', 'test')):
-            test_inference_info = test_pipeline(
+            test_inference_info, eval_bts = test_pipeline(
                 test_set=eval_set,
                 config_json=config_json,
                 device=device,
@@ -136,8 +135,5 @@ if __name__ == "__main__":
 
             # Convert test metrics into a dataframe
             test_inference_info_df = pd.DataFrame.from_dict(test_inference_info)
-            test_inference_info_df.to_csv(os.path.join(args.checkpoint_dir, f"{eval_name}_inference_info_kf{fold}.csv"))
-            os.makedirs(os.path.join('results', label), exist_ok=True)
-            test_inference_info_df.to_csv(os.path.join('results', label, f"{eval_name}_inference_info_kf{fold}.csv"))
-            # print(eval_name)
-            # print(test_inference_info_df)
+            os.makedirs(os.path.join(args.checkpoint_dir, 'clinical-subtype-analysis', 'results'), exist_ok=True)
+            test_inference_info_df.to_csv(os.path.join(args.checkpoint_dir, 'clinical-subtype-analysis', 'results', f"{eval_name}_inference_info_kf{fold}.csv"))

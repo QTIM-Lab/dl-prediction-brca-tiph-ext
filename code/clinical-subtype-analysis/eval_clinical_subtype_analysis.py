@@ -45,6 +45,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='CLAM: Clinical Subtype Analysis after Inference.')
     parser.add_argument('--seed', type=int, default=42, help='Random seed for reproducibility (default: 42).')
     parser.add_argument('--checkpoint_dir', type=str, required=True, help='The path to the checkpoint directory.')
+    parser.add_argument('--bts_nbins', type=int, default=1000, help='Number of bootstrap bins (default: 1000).')
     args = parser.parse_args()
 
 
@@ -65,4 +66,8 @@ if __name__ == "__main__":
         # Set seed
         set_seed(seed=args.seed)
 
-        compute_metrics_per_clinical_subtype(checkpoint_dir=args.checkpoint_dir, n_classes=n_classes, fold=fold)
+        compute_metrics_per_clinical_subtype(
+            checkpoint_dir=args.checkpoint_dir,
+            n_classes=n_classes,
+            fold=fold,
+            bts_nbins=args.bts_nbins)
