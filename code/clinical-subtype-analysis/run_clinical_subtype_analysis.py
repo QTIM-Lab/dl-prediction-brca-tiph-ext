@@ -125,7 +125,7 @@ if __name__ == "__main__":
         test_set.select_fold(fold=fold)
 
         for eval_set, eval_name in zip((train_set, val_set, test_set),('train', 'val', 'test')):
-            test_inference_info, eval_bts = test_pipeline(
+            test_inference_info = test_pipeline(
                 test_set=eval_set,
                 config_json=config_json,
                 device=device,
