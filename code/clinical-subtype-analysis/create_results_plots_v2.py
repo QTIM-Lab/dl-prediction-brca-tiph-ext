@@ -494,7 +494,6 @@ if __name__ == "__main__":
 
                 # Average Across Tasks
                 violin_dict_avg['model'].extend([m_name] * len(metrics) * 1000)
-
                 if metric[0] == 'AUC':
                     auc_ = metrics_matrix[:, :, m_idx, 0]
                     auc_avg = compute_avg_act(auc_)
@@ -523,7 +522,6 @@ if __name__ == "__main__":
 
                 # Average Across Metabolic Tasks
                 violin_dict_avg_metabolic['model'].extend([m_name] * len(metrics) * 1000)
-
                 if metric[0] == 'AUC':
                     auc_metabolic = metrics_matrix[:, metabolic_task_indices, m_idx, 0]
                     auc_metabolic_avg = compute_avg_act(auc_metabolic)
@@ -539,7 +537,6 @@ if __name__ == "__main__":
 
                 # Average Across Tumor Tasks
                 violin_dict_avg_tumor['model'].extend([m_name] * len(metrics) * 1000)
-
                 if metric[0] == 'AUC':
                     auc_tumor = metrics_matrix[:, tumor_task_indices, m_idx, 0]
                     auc_tumor_avg = compute_avg_act(auc_tumor)
@@ -563,6 +560,11 @@ if __name__ == "__main__":
             violin_dict['value'].extend(value)
 
 
+        if metrics[0] == 'AUC':
+            ylim = (-0.50, 1.5)
+        else:
+            ylim = (-1.50, 1.50)
+
         plot_comparison_boxplots(
             point_df=task_df,
             violin_df=violin_df,
@@ -570,6 +572,6 @@ if __name__ == "__main__":
             metrics=metrics,
             task=task,
             title=task,
-            ylim=(violin_df[(violin_df['task'] == task) & (violin_df['metric'] == metric[0])]['value'].min()-1.00, violin_df[(violin_df['task'] == task) & (violin_df['metric'] == metric[0])]['value'].max()+.50),
+            ylim=(violin_df[(violin_df['task'] == task) & (violin_df['metric'] == metric[0])]['value'].min()-1.00, violin_df[(violin_df['task'] == task) & (violin_df['metric'] == metric[0])]['value'].max()+0.50),
             output_path=output_path
         )
