@@ -348,6 +348,7 @@ if __name__ == "__main__":
                     v_model += [model_name] * len(bootstrap_results_auc)
                     v_metric += ['AUC'] * len(bootstrap_results_auc)
                     v_value = list()
+                    print(bootstrap_results_auc['results'].values.shape)
                     for i in bootstrap_results_auc['results'].values:
                         if not np.isnan(i):
                             v_value.append(i)
@@ -359,6 +360,7 @@ if __name__ == "__main__":
                     v_model += [model_name] * len(bootstrap_results_pcc)
                     v_metric += ['PCC'] * len(bootstrap_results_pcc)
                     v_value = list()
+                    print(bootstrap_results_pcc['results'].values.shape)
                     for i in bootstrap_results_pcc['results'].values:
                         if not np.isnan(i):
                             v_value.append(i)
