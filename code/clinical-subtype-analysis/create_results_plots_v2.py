@@ -492,8 +492,6 @@ if __name__ == "__main__":
             # Models
             for m_idx, m_name in enumerate(models):
 
-                # {0: 'AUC', 1: 'PCC', 2: 'ICC'}
-
                 # Average Across Tasks
                 violin_dict_avg['model'].extend([m_name] * len(metrics) * 1000)
 
@@ -517,7 +515,7 @@ if __name__ == "__main__":
                     violin_dict_avg_immune['value'].extend(auc_immune_avg)
 
                 else:
-                    pcc_immune = metrics_matrix[:, immune_task_indices, m_idx, 1]
+                    pcc_immune = metrics_matrix[:, immune_task_indices, m_idx, 0]
                     pcc_immune_avg = compute_avg_act(pcc_immune)
                     violin_dict_avg_immune['metric'].extend(['PCC'] * 1000)
                     violin_dict_avg_immune['value'].extend(pcc_immune_avg)
@@ -533,7 +531,7 @@ if __name__ == "__main__":
                     violin_dict_avg_metabolic['value'].extend(auc_metabolic_avg)
 
                 else:
-                    pcc_metabolic = metrics_matrix[:, metabolic_task_indices, m_idx, 1]
+                    pcc_metabolic = metrics_matrix[:, metabolic_task_indices, m_idx, 0]
                     pcc_metabolic_avg = compute_avg_act(pcc_metabolic)
                     violin_dict_avg_metabolic['metric'].extend(['PCC'] * 1000)
                     violin_dict_avg_metabolic['value'].extend(pcc_metabolic_avg)
@@ -549,7 +547,7 @@ if __name__ == "__main__":
                     violin_dict_avg_tumor['value'].extend(auc_tumor_avg)
 
                 else:
-                    pcc_tumor = metrics_matrix[:, tumor_task_indices, m_idx, 1]
+                    pcc_tumor = metrics_matrix[:, tumor_task_indices, m_idx, 0]
                     pcc_tumor_avg = compute_avg_act(pcc_tumor)
                     violin_dict_avg_tumor['metric'].extend(['PCC'] * 1000)
                     violin_dict_avg_tumor['value'].extend(pcc_tumor_avg)
@@ -572,6 +570,6 @@ if __name__ == "__main__":
             metrics=metrics,
             task=task,
             title=task,
-            ylim=(violin_df[(violin_df['task'] == task) & (violin_df['metric'] == metric[0])]['value'].min()-1.00, violin_df[(violin_df['task'] == task) & (violin_df['metric'] == metric[0])]['value'].max()+1.00),
+            ylim=(violin_df[(violin_df['task'] == task) & (violin_df['metric'] == metric[0])]['value'].min()-1.00, violin_df[(violin_df['task'] == task) & (violin_df['metric'] == metric[0])]['value'].max()+.50),
             output_path=output_path
         )
