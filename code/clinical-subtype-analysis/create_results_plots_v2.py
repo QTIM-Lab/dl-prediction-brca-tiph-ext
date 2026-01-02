@@ -569,12 +569,6 @@ if __name__ == "__main__":
             violin_dict['value'].extend(value)
 
 
-        # if metrics[0] == 'AUC':
-        #     ylim = (-0.2, 1.2)
-        # else:
-        #     ylim = (-1.25, 1.2)
-
-
         # Drop nan values from task_df and violin_df
         task_df.fillna(0.0, inplace=True)
         violin_df.fillna(0.0, inplace=True)
