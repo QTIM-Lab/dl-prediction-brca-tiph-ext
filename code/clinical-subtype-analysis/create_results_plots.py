@@ -311,9 +311,9 @@ if __name__ == "__main__":
                 ckpt_path = config[task_][model_name]
 
                 # Read bootstrap metrics and results
-                bootstrap_metrics = pd.read_csv(os.path.join(ckpt_path, f"test_{SUBTYPES_TABLE_DICT[subtype]}_bootstrap_metrics_kf0.csv "))
-                bootstrap_results_auc = pd.read_csv(os.path.join(ckpt_path, f"test_{SUBTYPES_TABLE_DICT[subtype]}_bootstrap_results_auc_kf0.csv"))
-                bootstrap_results_pcc = pd.read_csv(os.path.join(ckpt_path, f"test_{SUBTYPES_TABLE_DICT[subtype]}_bootstrap_results_pcc_kf0.csv"))
+                bootstrap_metrics = pd.read_csv(os.path.join(ckpt_path, "clinical-subtype-analysis/results", f"test_{SUBTYPES_TABLE_DICT[subtype]}_bootstrap_metrics_kf0.csv "))
+                bootstrap_results_auc = pd.read_csv(os.path.join(ckpt_path, "clinical-subtype-analysis/results", f"test_{SUBTYPES_TABLE_DICT[subtype]}_bootstrap_results_auc_kf0.csv"))
+                bootstrap_results_pcc = pd.read_csv(os.path.join(ckpt_path, "clinical-subtype-analysis/results", f"test_{SUBTYPES_TABLE_DICT[subtype]}_bootstrap_results_pcc_kf0.csv"))
 
                 # All Metrics
                 task += [task_] * 2
