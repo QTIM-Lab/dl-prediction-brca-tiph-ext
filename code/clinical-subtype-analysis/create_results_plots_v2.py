@@ -488,7 +488,7 @@ if __name__ == "__main__":
             violin_dict_avg_tumor['task'].extend(['Average Across Tumor Tasks'] * len(models) * len(metrics) * 1000)
 
 
-            # Like table2, we can do this automatically
+            # Models
             for m_idx, m_name in enumerate(models):
 
                 # {0: 'AUC', 1: 'PCC', 2: 'ICC'}
