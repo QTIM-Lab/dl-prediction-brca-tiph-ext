@@ -352,7 +352,7 @@ if __name__ == "__main__":
                         if not np.isnan(i):
                             v_value_.append(i)
                         else:
-                            v_value_.append(np.random.choice([value[0], ci_lower[0], ci_upper[0]], size=1)[0])
+                            v_value_.append(np.random.choice([value[0], ci_lower[0], ci_upper[0], 0.0, 1.0], size=1)[0])
                     v_value += v_value_
 
                 elif metrics[0] == 'PCC':
@@ -364,7 +364,7 @@ if __name__ == "__main__":
                         if not np.isnan(i):
                             v_value_.append(i)
                         else:
-                            v_value_.append(np.random.choice([value[0], ci_lower[0], ci_upper[0]], size=1)[0])
+                            v_value_.append(np.random.choice([value[0], ci_lower[0], ci_upper[0], -1.0, 1.0], size=1)[0])
                     v_value += v_value_
 
 
