@@ -8,6 +8,6 @@ export LD_LIBRARY_PATH="/autofs/space/crater_001/tools/usr/lib64:${LD_LIBRARY_PA
 
 
 
-python code/clinical-subtype-analysis/create_results_plots.py \
+python code/clinical-subtype-analysis/create_results_plots_v2.py \
  --config code/clinical-subtype-analysis/models_checkpoints.json \
  --output_path results/figures/clinical-subtype-analysis
