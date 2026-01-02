@@ -561,9 +561,9 @@ if __name__ == "__main__":
 
 
         if metrics[0] == 'AUC':
-            ylim = (-0.50, 1.5)
+            ylim = (-0.2, 1.2)
         else:
-            ylim = (-1.50, 1.50)
+            ylim = (-1.25, 1.2)
 
         plot_comparison_boxplots(
             point_df=task_df,
