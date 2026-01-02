@@ -333,13 +333,14 @@ if __name__ == "__main__":
                 if metrics[0] == 'AUC':
                     metric += ['AUC']
                     value += [bootstrap_metrics['auc'].values[0]]
-                    ci_lower += [bootstrap_metrics['auc_lower'].values[0]]
-                    ci_upper += [bootstrap_metrics['auc_upper'].values[0]]
+                    ci_lower += [bootstrap_metrics['auc_lower'].values[0] if not np.isnan(bootstrap_metrics['auc_lower'].values[0]) else 0.0]
+                    ci_upper += [bootstrap_metrics['auc_upper'].values[0] if not np.isnan(bootstrap_metrics['auc_upper'].values[0]) else 1.0]
                 elif metrics[0] == 'PCC':
                     metric += ['PCC']
                     value += [bootstrap_metrics['pcc'].values[0]]
-                    ci_lower += [bootstrap_metrics['pcc_lower'].values[0]]
-                    ci_upper += [bootstrap_metrics['pcc_upper'].values[0]]
+                    ci_lower += [bootstrap_metrics['pcc_lower'].values[0] if not np.isnan(bootstrap_metrics['pcc_lower'].values[0]) else -1.0]
+                    ci_upper += [bootstrap_metrics['pcc_upper'].values[0] if not np.isnan(bootstrap_metrics['pcc_upper'].values[0]) else 1.0]
+
 
                 # Violin data
                 if metrics[0] == 'AUC':
@@ -570,8 +571,8 @@ if __name__ == "__main__":
 
 
         plot_comparison_boxplots(
-            point_df=task_df.fillna(0.0),
-            violin_df=violin_df.fillna(0.0),
+            point_df=task_df,
+            violin_df=violin_df,
             models=models,
             metrics=metrics,
             task=task,
