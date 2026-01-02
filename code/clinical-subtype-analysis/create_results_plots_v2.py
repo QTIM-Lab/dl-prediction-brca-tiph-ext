@@ -565,6 +565,10 @@ if __name__ == "__main__":
         else:
             ylim = (-1.25, 1.2)
 
+
+        # Drop nan values from task_df and violin_df
+        violin_df = violin_df.dropna(subset=['value'])
+
         plot_comparison_boxplots(
             point_df=task_df,
             violin_df=violin_df,
