@@ -211,8 +211,8 @@ def plot_comparison_boxplots(
 
     # --- Finalize Plot Formatting ---
     ax.grid(visible=False, axis='both', which='both')
-    for i in range(len(metrics) - 1):
-        ax.axvline(x=i + 0.5, color='#E6E6E6', linestyle='--', linewidth=1, zorder=-1)
+    # for i in range(len(metrics) - 1):
+    #     ax.axvline(x=i + 0.5, color='#E6E6E6', linestyle='--', linewidth=1, zorder=-1)
     ax.set_xticks(range(len(metrics)))
     ax.set_xticklabels(metrics, fontsize=FONT_SIZES['tick_label'])
     ax.set_title(title, fontsize=FONT_SIZES['title'], pad=20, weight='bold')
@@ -326,24 +326,33 @@ if __name__ == "__main__":
                 bootstrap_results_pcc = pd.read_csv(os.path.join(ckpt_path, "clinical-subtype-analysis/results", f"test_{SUBTYPES_TABLE_DICT[model_name]}_bootstrap_results_pcc_kf0.csv"))
 
                 # All Metrics
-                task += [task_] * 2
-                model += [model_name] * 2
-                metric += ['AUC', 'PCC']
-                value += [bootstrap_metrics['auc'].values[0], bootstrap_metrics['pcc'].values[0]]
-                ci_lower += [bootstrap_metrics['auc_lower'].values[0], bootstrap_metrics['pcc_lower'].values[0]]
-                ci_upper += [bootstrap_metrics['auc_upper'].values[0], bootstrap_metrics['pcc_upper'].values[0]]
+                task += [task_] * 1
+                model += [model_name] * 1
 
-                # AUC
-                v_task += [task_] * len(bootstrap_results_auc)
-                v_model += [model_name] * len(bootstrap_results_auc)
-                v_metric += ['AUC'] * len(bootstrap_results_auc)
-                v_value += list(bootstrap_results_auc['results'].values)
+                # Metric data
+                if metrics[0] == 'AUC':
+                    metric += ['AUC']
+                    value += [bootstrap_metrics['auc'].values[0]]
+                    ci_lower += [bootstrap_metrics['auc_lower'].values[0]]
+                    ci_upper += [bootstrap_metrics['auc_upper'].values[0]]
+                elif metrics[0] == 'PCC':
+                    metric += ['PCC']
+                    value += [bootstrap_metrics['pcc'].values[0]]
+                    ci_lower += [bootstrap_metrics['pcc_lower'].values[0]]
+                    ci_upper += [bootstrap_metrics['pcc_upper'].values[0]]
 
-                # PCC
-                v_task += [task_] * len(bootstrap_results_pcc)
-                v_model += [model_name] * len(bootstrap_results_pcc)
-                v_metric += ['PCC'] * len(bootstrap_results_pcc)
-                v_value += list(bootstrap_results_pcc['results'].values)
+                # Violin data
+                if metrics[0] == 'AUC':
+                    v_task += [task_] * len(bootstrap_results_auc)
+                    v_model += [model_name] * len(bootstrap_results_auc)
+                    v_metric += ['AUC'] * len(bootstrap_results_auc)
+                    v_value += list(bootstrap_results_auc['results'].values)
+
+                elif metrics[0] == 'PCC':
+                    v_task += [task_] * len(bootstrap_results_pcc)
+                    v_model += [model_name] * len(bootstrap_results_pcc)
+                    v_metric += ['PCC'] * len(bootstrap_results_pcc)
+                    v_value += list(bootstrap_results_pcc['results'].values)
 
 
     # Create DataFrames
@@ -499,7 +508,7 @@ if __name__ == "__main__":
                     auc_avg = compute_avg_act(auc_)
                     violin_dict_avg['metric'].extend(['AUC'] * 1000)
                     violin_dict_avg['value'].extend(auc_avg)
-                else:
+                elif metric[0] == 'PCC':
                     pcc_ = metrics_matrix[:, :, m_idx, 0]
                     pcc_avg = compute_avg_act(pcc_)
                     violin_dict_avg['metric'].extend(['PCC'] * 1000)
@@ -513,7 +522,7 @@ if __name__ == "__main__":
                     violin_dict_avg_immune['metric'].extend(['AUC'] * 1000)
                     violin_dict_avg_immune['value'].extend(auc_immune_avg)
 
-                else:
+                elif metric[0] == 'PCC':
                     pcc_immune = metrics_matrix[:, immune_task_indices, m_idx, 0]
                     pcc_immune_avg = compute_avg_act(pcc_immune)
                     violin_dict_avg_immune['metric'].extend(['PCC'] * 1000)
@@ -528,7 +537,7 @@ if __name__ == "__main__":
                     violin_dict_avg_metabolic['metric'].extend(['AUC'] * 1000)
                     violin_dict_avg_metabolic['value'].extend(auc_metabolic_avg)
 
-                else:
+                elif metric[0] == 'PCC':
                     pcc_metabolic = metrics_matrix[:, metabolic_task_indices, m_idx, 0]
                     pcc_metabolic_avg = compute_avg_act(pcc_metabolic)
                     violin_dict_avg_metabolic['metric'].extend(['PCC'] * 1000)
@@ -543,7 +552,7 @@ if __name__ == "__main__":
                     violin_dict_avg_tumor['metric'].extend(['AUC'] * 1000)
                     violin_dict_avg_tumor['value'].extend(auc_tumor_avg)
 
-                else:
+                elif metric[0] == 'PCC':
                     pcc_tumor = metrics_matrix[:, tumor_task_indices, m_idx, 0]
                     pcc_tumor_avg = compute_avg_act(pcc_tumor)
                     violin_dict_avg_tumor['metric'].extend(['PCC'] * 1000)
