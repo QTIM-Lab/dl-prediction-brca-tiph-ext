@@ -460,7 +460,6 @@ if __name__ == "__main__":
                     for m_id, m_n in enumerate(models):
                         m_mask = (violin_df_raw['model'] == m_n)
                         for metric_id, metric_name in metrics_dict.items():
-                            # print(metric_id, metric_name)
                             metric_mask = (violin_df_raw['metric'] == metric_name)
                             filtered_data = violin_df_raw[t_mask & m_mask & metric_mask]
                             filtered_data = filtered_data.values
