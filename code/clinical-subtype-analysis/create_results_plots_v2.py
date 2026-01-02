@@ -247,12 +247,13 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Explainable Multimodal Prediction of Breast Cancer Tumor and Immune Phenotypes from Histopathology.')
     parser.add_argument('--config', type=str, help='Path to config file.', default='src/config/figures/model_checkpoints.json')
     parser.add_argument('--output_path', type=str, help='Path to save the output plots.', default='results/manuscript/figures')
+    parser.add_argument('--metric', type=str, help='List of metrics to plot.', choices=['AUC', 'PCC'], required=True)
     args = parser.parse_args()
 
 
 
     # Create output directory if it doesn't exist and add table to the output path
-    output_path = os.path.join(args.output_path, "v2")
+    output_path = os.path.join(args.output_path, "v2", args.metric)
     os.makedirs(output_path, exist_ok=True)
 
     # Models based on Table
@@ -260,7 +261,7 @@ if __name__ == "__main__":
     # print(models)
 
     # Metrics
-    metrics = ['AUC', 'PCC']
+    metrics = [args.metric]
     metrics_dict = {idx:name for idx, name in enumerate(metrics)}
     # print(metrics_dict)
 
@@ -561,6 +562,6 @@ if __name__ == "__main__":
             metrics=metrics,
             task=task,
             title=task,
-            ylim=(violin_df[violin_df['task'] == task]['value'].min()-0.05, 1.0),
+            ylim=(violin_df[violin_df['task'] == task]['value'].min()-0.05, 1.05),
             output_path=output_path
         )
