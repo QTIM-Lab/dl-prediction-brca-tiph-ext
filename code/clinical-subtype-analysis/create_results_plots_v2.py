@@ -585,6 +585,6 @@ if __name__ == "__main__":
             metrics=metrics,
             task=task,
             title=task,
-            ylim=(violin_df[violin_df['task'] == task]['value'].min()-0.05, 1.0),
+            ylim=(violin_df[violin_df['task'] == task]['value'].min()-0.05, 1.10),
             output_path=output_path
         )
