@@ -496,15 +496,17 @@ if __name__ == "__main__":
 
                 # Average Across Tasks
                 violin_dict_avg['model'].extend([m_name] * len(metrics) * 1000)
-                auc_ = metrics_matrix[:, :, m_idx, 0]
-                auc_avg = compute_avg_act(auc_)
-                violin_dict_avg['metric'].extend(['AUC'] * 1000)
-                violin_dict_avg['value'].extend(auc_avg)
 
-                pcc_ = metrics_matrix[:, :, m_idx, 1]
-                pcc_avg = compute_avg_act(pcc_)
-                violin_dict_avg['metric'].extend(['PCC'] * 1000)
-                violin_dict_avg['value'].extend(pcc_avg)
+                if metric == 'AUC':
+                    auc_ = metrics_matrix[:, :, m_idx, 0]
+                    auc_avg = compute_avg_act(auc_)
+                    violin_dict_avg['metric'].extend(['AUC'] * 1000)
+                    violin_dict_avg['value'].extend(auc_avg)
+                else:
+                    pcc_ = metrics_matrix[:, :, m_idx, 0]
+                    pcc_avg = compute_avg_act(pcc_)
+                    violin_dict_avg['metric'].extend(['PCC'] * 1000)
+                    violin_dict_avg['value'].extend(pcc_avg)
 
                 # Average Across Immune Tasks
                 violin_dict_avg_immune['model'].extend([m_name] * len(metrics) * 1000)
