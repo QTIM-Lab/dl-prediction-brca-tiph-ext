@@ -568,14 +568,9 @@ if __name__ == "__main__":
             violin_dict['metric'].extend(metric)
             violin_dict['value'].extend(value)
 
-
-        # Drop nan values from task_df and violin_df
-        task_df.fillna(0.0, inplace=True)
-        violin_df.fillna(0.0, inplace=True)
-
         plot_comparison_boxplots(
-            point_df=task_df,
-            violin_df=violin_df,
+            point_df=task_df.fillna(0.0),
+            violin_df=violin_df.fillna(0.0),
             models=models,
             metrics=metrics,
             task=task,
