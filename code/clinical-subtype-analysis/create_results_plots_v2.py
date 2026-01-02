@@ -497,7 +497,7 @@ if __name__ == "__main__":
                 # Average Across Tasks
                 violin_dict_avg['model'].extend([m_name] * len(metrics) * 1000)
 
-                if metric == 'AUC':
+                if metric[0] == 'AUC':
                     auc_ = metrics_matrix[:, :, m_idx, 0]
                     auc_avg = compute_avg_act(auc_)
                     violin_dict_avg['metric'].extend(['AUC'] * 1000)
@@ -510,41 +510,49 @@ if __name__ == "__main__":
 
                 # Average Across Immune Tasks
                 violin_dict_avg_immune['model'].extend([m_name] * len(metrics) * 1000)
-                auc_immune = metrics_matrix[:, immune_task_indices, m_idx, 0]
-                auc_immune_avg = compute_avg_act(auc_immune)
-                violin_dict_avg_immune['metric'].extend(['AUC'] * 1000)
-                violin_dict_avg_immune['value'].extend(auc_immune_avg)
+                if metric[0] == 'AUC':
+                    auc_immune = metrics_matrix[:, immune_task_indices, m_idx, 0]
+                    auc_immune_avg = compute_avg_act(auc_immune)
+                    violin_dict_avg_immune['metric'].extend(['AUC'] * 1000)
+                    violin_dict_avg_immune['value'].extend(auc_immune_avg)
 
-                pcc_immune = metrics_matrix[:, immune_task_indices, m_idx, 1]
-                pcc_immune_avg = compute_avg_act(pcc_immune)
-                violin_dict_avg_immune['metric'].extend(['PCC'] * 1000)
-                violin_dict_avg_immune['value'].extend(pcc_immune_avg)
+                else:
+                    pcc_immune = metrics_matrix[:, immune_task_indices, m_idx, 1]
+                    pcc_immune_avg = compute_avg_act(pcc_immune)
+                    violin_dict_avg_immune['metric'].extend(['PCC'] * 1000)
+                    violin_dict_avg_immune['value'].extend(pcc_immune_avg)
 
 
                 # Average Across Metabolic Tasks
                 violin_dict_avg_metabolic['model'].extend([m_name] * len(metrics) * 1000)
-                auc_metabolic = metrics_matrix[:, metabolic_task_indices, m_idx, 0]
-                auc_metabolic_avg = compute_avg_act(auc_metabolic)
-                violin_dict_avg_metabolic['metric'].extend(['AUC'] * 1000)
-                violin_dict_avg_metabolic['value'].extend(auc_metabolic_avg)
 
-                pcc_metabolic = metrics_matrix[:, metabolic_task_indices, m_idx, 1]
-                pcc_metabolic_avg = compute_avg_act(pcc_metabolic)
-                violin_dict_avg_metabolic['metric'].extend(['PCC'] * 1000)
-                violin_dict_avg_metabolic['value'].extend(pcc_metabolic_avg)
+                if metric[0] == 'AUC':
+                    auc_metabolic = metrics_matrix[:, metabolic_task_indices, m_idx, 0]
+                    auc_metabolic_avg = compute_avg_act(auc_metabolic)
+                    violin_dict_avg_metabolic['metric'].extend(['AUC'] * 1000)
+                    violin_dict_avg_metabolic['value'].extend(auc_metabolic_avg)
+
+                else:
+                    pcc_metabolic = metrics_matrix[:, metabolic_task_indices, m_idx, 1]
+                    pcc_metabolic_avg = compute_avg_act(pcc_metabolic)
+                    violin_dict_avg_metabolic['metric'].extend(['PCC'] * 1000)
+                    violin_dict_avg_metabolic['value'].extend(pcc_metabolic_avg)
 
 
                 # Average Across Tumor Tasks
                 violin_dict_avg_tumor['model'].extend([m_name] * len(metrics) * 1000)
-                auc_tumor = metrics_matrix[:, tumor_task_indices, m_idx, 0]
-                auc_tumor_avg = compute_avg_act(auc_tumor)
-                violin_dict_avg_tumor['metric'].extend(['AUC'] * 1000)
-                violin_dict_avg_tumor['value'].extend(auc_tumor_avg)
 
-                pcc_tumor = metrics_matrix[:, tumor_task_indices, m_idx, 1]
-                pcc_tumor_avg = compute_avg_act(pcc_tumor)
-                violin_dict_avg_tumor['metric'].extend(['PCC'] * 1000)
-                violin_dict_avg_tumor['value'].extend(pcc_tumor_avg)
+                if metric[0] == 'AUC':
+                    auc_tumor = metrics_matrix[:, tumor_task_indices, m_idx, 0]
+                    auc_tumor_avg = compute_avg_act(auc_tumor)
+                    violin_dict_avg_tumor['metric'].extend(['AUC'] * 1000)
+                    violin_dict_avg_tumor['value'].extend(auc_tumor_avg)
+
+                else:
+                    pcc_tumor = metrics_matrix[:, tumor_task_indices, m_idx, 1]
+                    pcc_tumor_avg = compute_avg_act(pcc_tumor)
+                    violin_dict_avg_tumor['metric'].extend(['PCC'] * 1000)
+                    violin_dict_avg_tumor['value'].extend(pcc_tumor_avg)
 
         else:
             task_ = violin_df['task'].values
