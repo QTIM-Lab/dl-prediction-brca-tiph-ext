@@ -569,14 +569,14 @@ if __name__ == "__main__":
             violin_dict['value'].extend(value)
 
 
-        if metrics[0] == 'AUC':
-            ylim = (-0.2, 1.2)
-        else:
-            ylim = (-1.25, 1.2)
+        # if metrics[0] == 'AUC':
+        #     ylim = (-0.2, 1.2)
+        # else:
+        #     ylim = (-1.25, 1.2)
 
 
         # Drop nan values from task_df and violin_df
-        violin_df = violin_df.dropna(subset=['value'])
+        # violin_df = violin_df.dropna(subset=['value'])
 
         plot_comparison_boxplots(
             point_df=task_df,
@@ -585,6 +585,6 @@ if __name__ == "__main__":
             metrics=metrics,
             task=task,
             title=task,
-            ylim=ylim,
+            ylim=(violin_df[violin_df['task'] == task]['value'].min()-0.05, 1.0),
             output_path=output_path
         )
