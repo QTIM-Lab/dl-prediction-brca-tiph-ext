@@ -347,25 +347,25 @@ if __name__ == "__main__":
                     v_task += [task_] * len(bootstrap_results_auc)
                     v_model += [model_name] * len(bootstrap_results_auc)
                     v_metric += ['AUC'] * len(bootstrap_results_auc)
-                    v_value = list()
+                    v_value_ = list()
                     for i in list(bootstrap_results_auc['results'].values):
-                        print(i)
                         if not np.isnan(i):
-                            v_value.append(i)
+                            v_value_.append(i)
                         else:
-                            v_value.append(np.random.choice([value[0], ci_lower[0], ci_upper[0]], size=1)[0])
+                            v_value_.append(np.random.choice([value[0], ci_lower[0], ci_upper[0]], size=1)[0])
+                    v_value += v_value_
 
                 elif metrics[0] == 'PCC':
                     v_task += [task_] * len(bootstrap_results_pcc)
                     v_model += [model_name] * len(bootstrap_results_pcc)
                     v_metric += ['PCC'] * len(bootstrap_results_pcc)
-                    v_value = list()
+                    v_value_ = list()
                     for i in list(bootstrap_results_pcc['results'].values):
-                        print(i)
                         if not np.isnan(i):
-                            v_value.append(i)
+                            v_value_.append(i)
                         else:
-                            v_value.append(np.random.choice([value[0], ci_lower[0], ci_upper[0]], size=1)[0])
+                            v_value_.append(np.random.choice([value[0], ci_lower[0], ci_upper[0]], size=1)[0])
+                    v_value += v_value_
 
 
     # Create DataFrames
