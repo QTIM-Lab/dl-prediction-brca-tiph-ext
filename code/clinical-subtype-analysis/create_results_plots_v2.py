@@ -576,7 +576,8 @@ if __name__ == "__main__":
 
 
         # Drop nan values from task_df and violin_df
-        violin_df = violin_df.fillna(0.0, inplace=False)
+        task_df.fillna(0.0, inplace=True)
+        violin_df.fillna(0.0, inplace=True)
 
         plot_comparison_boxplots(
             point_df=task_df,
