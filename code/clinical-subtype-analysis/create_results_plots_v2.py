@@ -586,7 +586,7 @@ if __name__ == "__main__":
                  1.15
         )
         elif metrics[0] == 'PCC':
-            y_lim = (
+            ylim = (
                 min((violin_df['value'].min()-0.50, -1.15)),
                     1.15
             )
@@ -597,6 +597,6 @@ if __name__ == "__main__":
             metrics=metrics,
             task=task,
             title=task,
-            ylim=y_lim,
+            ylim=ylim,
             output_path=output_path
         )
