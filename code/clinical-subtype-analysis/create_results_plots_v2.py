@@ -582,12 +582,12 @@ if __name__ == "__main__":
 
         if metrics[0] == 'AUC':
             ylim = (
-                min((violin_df['value'].min()-0.05, 0.0)),
+                min((task_df['ci_lower'].min()-0.05, 0.0)),
                 1.15
             )
         elif metrics[0] == 'PCC':
             ylim = (
-                max((violin_df['value'].min()-0.50, -1.15)),
+                max((task_df['ci_lower'].min()-0.05, -1.15)),
                 1.15
             )
         plot_comparison_boxplots(
