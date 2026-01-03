@@ -580,7 +580,16 @@ if __name__ == "__main__":
             violin_dict['metric'].extend(metric)
             violin_dict['value'].extend(value)
 
-
+        if metrics[0] == 'AUC':
+            ylim = (
+            max((violin_df['value'].min()-0.05, 0.0)),
+                 1.15
+        )
+        elif metrics[0] == 'PCC':
+            y_lim = (
+                min((violin_df['value'].min()-0.50, -1.15)),
+                    1.15
+            )
         plot_comparison_boxplots(
             point_df=task_df,
             violin_df=violin_df,
